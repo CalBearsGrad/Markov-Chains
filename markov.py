@@ -47,19 +47,20 @@ def make_chains(text_string):
     words = text_string.split()
 
     #iterate over words
-    for index in range(len(words)):
-        if index <= len(words)-3:  # Make sure there is enough words to create values
-    # Put str into liist
-        words = text_string.split()
-        print words
+    # for index in range(len(words)):
+    #     if index <= len(words)-3:  # Make sure there is enough words to create values
+    # # Put str into list
+    #         words = text_string.split()
+    #         print words
     #iterate over words
     for index in range(len(words)):
-        if index <= len(words)-2:
-            pair_word1 = words[index]
-            pair_word2 = words[index + 1]
+        if index <= len(words)-4:
+            trigram_word1 = words[index]
+            trigram_word2 = words[index + 1]
+            trigram_word3 = words[index + 2]
     #     #add two words to a tuple
-            words_in_tuple = (pair_word1, pair_word2)
-            next_word = words[index + 2]
+            words_in_tuple = (trigram_word1, trigram_word2, trigram_word3)
+            next_word = words[index + 3]
             # check if words_in_tuple in dictionary:
             if words_in_tuple in chains:
             # if it is: update the value:
@@ -67,7 +68,6 @@ def make_chains(text_string):
             # create new key-value pair
             else:
                 chains[words_in_tuple] = [next_word]
-    print chains
     return chains
 
 
@@ -77,11 +77,34 @@ def make_text(chains):
     words = []
 
     # your code goes here
+    keys_in_chains = chains.keys()
+    #look up key in dictionary
+    link = choice(keys_in_chains)  # a tuple from the dictionary chains
+    # get a link - (pair_word_1, pair_word2) and append these words to the words list
+    words.extend(link)
+    #print "This is link", link
+    #print "This is words before the while loop ", words
+    # start of loop
 
+    while len(words) < len(keys_in_chains):
+        link = choice(keys_in_chains)
+        #print "This is link after choice ", link
+        words.extend(link)
+        #print "This is words after link has been added ", words
+        # get random_new_word from the list of words that follows the link by picking any index from the list that is equal to or less than the length.
+        random_new_word = choice(chains[link])
+        #append random_new_word to words list
+        words.append(random_new_word)
+        # create a new key, which is a tuple (pair_word2, random_new_word)
+        link = (link[2], random_new_word, random_new_word)
+        #print "This is link at end of while loop ", link
+
+    #print "This is words list", words
+    print " ".join(words)
     return " ".join(words)
 
-
-input_path = "green-eggs.txt"
+################## The functions get called down below ####################
+input_path = "Combined_text.txt"
 
 # Open the file and turn it into one long string
 input_text = open_and_read_file(input_path)
@@ -92,4 +115,4 @@ chains = make_chains(input_text)
 # Produce random text
 random_text = make_text(chains)
 
-print random_text
+# print random_text
